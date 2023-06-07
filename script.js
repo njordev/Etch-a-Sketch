@@ -2,6 +2,7 @@ let size = 16;
 let isRainbowMode = false;
 let isEraserMode = false;
 let color = "#333333";
+let isDrawing = false;
 
 function initializeGrid(size) {
     const grid = document.querySelector("#grid");
@@ -10,18 +11,43 @@ function initializeGrid(size) {
     for (let i = 0; i < size * size; i++) {
         const cell = document.createElement("div");
         cell.addEventListener("mouseover", changeColor);
+        cell.addEventListener("mousedown", () => {isDrawing = true});
+        cell.addEventListener("mouseup", () => {isDrawing = false});
+        cell.addEventListener("touchstart", (e) => {
+            isDrawing = true;
+            e.preventDefault();
+            changeColor(e);
+        });
+        cell.addEventListener("touchmove", (e) => {
+            e.preventDefault();
+            changeColor(e);
+        });
+        cell.addEventListener("touchend", () => {isDrawing = false});
         grid.appendChild(cell);
     }
 }
 
 function changeColor(e) {
-    if (isEraserMode) {
-        e.target.style.backgroundColor = "#ffffff";
-    } else if (isRainbowMode) {
-        e.target.style.backgroundColor =
-            "hsl(" + Math.random() * 360 + ", 100%, 50%)";
+    if (!isDrawing) {
+        return;
+    }
+    let target;
+    const grid = document.querySelector("#grid");
+    if (e.type === "touchmove") {
+        let touch = e.touches[0];
+        target = document.elementFromPoint(touch.clientX, touch.clientY);
     } else {
-        e.target.style.backgroundColor = color;
+        target = e.target;
+    }
+    if (target.parentElement !== grid) {
+        return;
+    }
+    if (isEraserMode) {
+        target.style.backgroundColor = "#ffffff";
+    } else if (isRainbowMode) {
+        target.style.backgroundColor = "hsl(" + Math.random() * 360 + ", 100%, 50%)";
+    } else {
+        target.style.backgroundColor = color;
     }
 }
 

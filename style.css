@@ -89,3 +89,29 @@ button:hover {
 #colorPicker {
   margin-bottom: 8px;
 }
+
+@media screen and (max-width: 600px) {
+  body {
+    justify-content: flex-start;
+  }
+
+  .flex-container {
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+  }
+
+  .settings {
+    width: 90%;
+    margin-right: 0;
+    margin-bottom: 20px;
+  }
+
+  #grid {
+    width: 90vw;
+    height: 90vw;
+  }
+}
+
+
+
